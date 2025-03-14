@@ -416,7 +416,6 @@ elif page == "Add Book":
         
         submitted = st.form_submit_button("Add Book")
         
-        # Use 'submitted' inside the same 'with st.form()' block
         if submitted:
             if title and author and genre:
                 if add_book(conn, title, author, publication_year, genre, read_status):
