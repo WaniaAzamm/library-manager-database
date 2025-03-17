@@ -472,12 +472,13 @@ elif page == "Search Books":
     col1, col2 = st.columns([1, 3])
     
     with col1:
-        search_by = st.radio("Search by", ["title", "author", "genre"])
+        search_by = st.radio("Search by", ["Title", "Author", "Genre"])
     
     with col2:
         search_term = st.text_input("Enter search term", placeholder="Type here to search...")
+        search_button = st.button("Search")
     
-    if search_term:
+    if search_term and search_button:
         results = search_books(conn, search_term, search_by)
         
         if results:
@@ -523,8 +524,12 @@ elif page == "View All Books":
             all_genres = list(df["genre"].unique()) if "genre" in df.columns else []
             genre_filter = st.multiselect("Filter by Genre", options=all_genres if all_genres else ["No genres available"])
         with col2:
-            sort_options = [col for col in ["title", "author", "publication_year", "genre"] if col in df.columns]
-            sort_by = st.selectbox("Sort by", sort_options if sort_options else ["No options available"])
+            sort_columns = [col for col in ["title", "author", "publication_year", "genre"] if col in df.columns]
+            sort_labels = [col.replace('_', ' ').title() for col in sort_columns]
+            sort_dict = dict(zip(sort_labels, sort_columns))
+            
+            sort_by_label = st.selectbox("Sort by", sort_labels if sort_labels else ["No options available"])
+            sort_by = sort_dict.get(sort_by_label, sort_labels[0] if sort_labels else None)
         
         filtered_df = df
         if genre_filter and all_genres and "genre" in df.columns:
@@ -664,3 +669,4 @@ elif page == "Statistics":
 
 st.sidebar.markdown("---")
 st.sidebar.info("Developed By Wania Azam")
+
